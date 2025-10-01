@@ -1,0 +1,26 @@
+/ose-election
+│
+├── public/
+│   ├── index.html         # Login Page
+│   ├── vote.html          # Voting Page
+│   ├── livecount.html     # Panitia view (real-time votes)
+│   ├── admin.html         # Admin control
+│   └── supervise.html     # For Guru/Parcom oversight
+│
+├── css/
+│   └── style.css          # Main stylesheet
+│
+├── js/
+│   ├── auth.js            # Handles role-based login (Murid, Guru, Panitia, Parcom)
+│   ├── vote.js            # Logic for casting and saving votes
+│   ├── livecount.js       # Displays live vote tallying (for Panitia)
+│   └── data.js            # Loads and manages candidate & user data
+│
+├── data/
+│   ├── users.sql          # Dummy login data with roles
+│   ├── votes.sql          # Stores vote records
+│   └── candidates.sql     # Candidate details (names, images, bios, etc.)
+│
+├── .vercel.json           # Optional Vercel config (routes, rewrites, etc.)
+├── README.md              # Project overview, setup, and usage
+└── package.json           # Optional - use if backend logic / build tools are needed
