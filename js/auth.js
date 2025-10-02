@@ -18,13 +18,13 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   if (user) {
     // Redirect based on role
     if (user.role === "murid") {
-      window.location.href = "public/vote.html";
+      window.location.href = "vote.html";
     } else if (user.role === "guru" || user.role === "parcom") {
-      window.location.href = "public/supervise.html";
+      window.location.href = "supervise.html";
     } else if (user.role === "panitia") {
-      window.location.href = "public/livecount.html";
+      window.location.href = "livecount.html";
     }
-  } else {
+  }else {
     errorMsg.textContent = "Invalid username or password!";
   }
 });
