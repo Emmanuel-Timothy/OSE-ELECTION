@@ -1,4 +1,4 @@
-// Dummy users for test (replace with users.sql later)
+// Dummy users for testing
 const users = [
   { username: "murid01", password: "1234", role: "murid" },
   { username: "guru01", password: "abcd", role: "guru" },
@@ -6,25 +6,37 @@ const users = [
   { username: "panitia01", password: "admin", role: "panitia" }
 ];
 
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+// Ensure DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("loginForm");
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const errorMsg = document.getElementById("error");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); // prevent form refresh
 
-  const user = users.find(u => u.username === username && u.password === password);
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorMsg = document.getElementById("error");
 
-  if (user) {
-    // Redirect based on role
-    if (user.role === "murid") {
-      window.location.href = "public/vote.html";
-    } else if (user.role === "guru" || user.role === "parcom") {
-      window.location.href = "public/supervise.html";
-    } else if (user.role === "panitia") {
-      window.location.href = "public/livecount.html";
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+      // Redirect based on role
+      switch (user.role) {
+        case "murid":
+          window.location.href = "vote.html";
+          break;
+        case "guru":
+        case "parcom":
+          window.location.href = "supervise.html";
+          break;
+        case "panitia":
+          window.location.href = "livecount.html";
+          break;
+        default:
+          errorMsg.textContent = "Unknown role.";
+      }
+    } else {
+      errorMsg.textContent = "Invalid username or password!";
     }
-  } else {
-    errorMsg.textContent = "Invalid username or password!";
-  }
+  });
 });
