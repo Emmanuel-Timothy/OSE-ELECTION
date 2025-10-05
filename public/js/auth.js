@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMsg = document.getElementById("error");
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Redirect based on role
         switch (data.role) {
           case "murid":
             window.location.href = "vote.html"; break;
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         errorMsg.textContent = data.error;
       }
-
     } catch (err) {
       console.error(err);
       errorMsg.textContent = "Server error. Please try again later.";
