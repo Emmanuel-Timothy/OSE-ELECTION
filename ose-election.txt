@@ -5,16 +5,16 @@
 │   ├── vote.html          # Voting Page
 │   ├── livecount.html     # Panitia view (real-time votes)
 │   ├── admin.html         # Admin control
-│   └── supervise.html     # For Guru/Parcom oversight
-│
-├── css/
-│   └── style.css          # Main stylesheet
-│
-├── js/
-│   ├── auth.js            # Handles role-based login (Murid, Guru, Panitia, Parcom)
-│   ├── vote.js            # Logic for casting and saving votes
-│   ├── livecount.js       # Displays live vote tallying (for Panitia)
-│   └── data.js            # Loads and manages candidate & user data
+│   ├── supervise.html     # For Guru/Parcom oversight
+│   │
+│   ├──css/
+│   │   └── style.css          # Main stylesheet
+│   │
+│   ├──js/
+│      ├── auth.js            # Handles role-based login (Murid, Guru, Panitia, Parcom)
+│      ├── vote.js            # Logic for casting and saving votes
+│      ├── livecount.js       # Displays live vote tallying (for Panitia)
+│      └── data.js            # Loads and manages candidate & user data
 │
 ├── data/
 │   ├── users.sql          # Dummy login data with roles
