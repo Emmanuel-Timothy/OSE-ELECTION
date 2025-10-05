@@ -15,8 +15,10 @@
 │      ├── vote.js            # Logic for casting and saving votes
 │      ├── livecount.js       # Displays live vote tallying (for Panitia)
 │      └── data.js            # Loads and manages candidate & user data
-│
-├── data/
+├── api/
+│   └── login.js           # Express-like API route (handles login)
+├── db/
+│   ├── db.js              # SQLite or PostgreSQL connector
 │   ├── users.sql          # Dummy login data with roles
 │   ├── votes.sql          # Stores vote records
 │   └── candidates.sql     # Candidate details (names, images, bios, etc.)
