@@ -1,6 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-const db = new sqlite3.Database(path.resolve(__dirname, 'data.sqlite'));
-
-module.exports = db;
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+module.exports = pool;

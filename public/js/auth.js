@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMsg = document.getElementById("error");
 
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
+      const response = await fetch('https://ep-red-wildflower-a10sulz5.apirest.ap-southeast-1.aws.neon.tech/neondb/rest/v1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
