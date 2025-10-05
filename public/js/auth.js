@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
 
-  form.addEventListener("submit", async function (e) {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = document.getElementById("username").value.trim();
@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMsg = document.getElementById("error");
 
     try {
-      const response = await fetch('https://ep-red-wildflower-a10sulz5.apirest.ap-southeast-1.aws.neon.tech/neondb/rest/v1', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
       });
 
@@ -19,22 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         switch (data.role) {
-          case "murid":
-            window.location.href = "vote.html"; break;
+          case "murid": window.location.href = "vote.html"; break;
           case "guru":
-          case "parcom":
-            window.location.href = "supervise.html"; break;
-          case "admin":
-            window.location.href = "admin.html"; break;
-          default:
-            errorMsg.textContent = "Unknown role";
+          case "parcom": window.location.href = "supervise.html"; break;
+          case "admin": window.location.href = "admin.html"; break;
+          default: errorMsg.textContent = "Unknown role.";
         }
       } else {
-        errorMsg.textContent = data.error;
+        errorMsg.textContent = data.error || "Login failed.";
       }
     } catch (err) {
       console.error(err);
-      errorMsg.textContent = "Server error. Please try again later.";
+      errorMsg.textContent = "Server error. Try again.";
     }
   });
 });
