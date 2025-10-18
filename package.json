@@ -1,0 +1,9 @@
+{
+  "name": "vercel-neon-login",
+  "version": "1.0.0",
+  "main": "api/login.js",
+  "type": "module",
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}
