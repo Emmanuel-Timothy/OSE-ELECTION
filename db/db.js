@@ -1,32 +1,12 @@
-import { Pool } from 'pg';
+const { Pool } = require('pg');
+
+const connectionString = process.env.DATABASE_URL || '';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  connectionString,
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
-async function getData() {
-  const client = await pool.connect();
-  try {
-    const { rows } = await client.query('SELECT * FROM posts');
-    return rows;
-  } finally {
-    client.release();
-  }
-}
-
-export default async function Page() {
-  const data = await getData();
-  return (
-    <div>
-      {data.map((post, index) => (
-        <div key={index}>
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
+module.exports = pool;

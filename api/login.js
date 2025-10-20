@@ -1,4 +1,5 @@
-const pool = require('../db/db');
+const poolModule = require('../db/db');
+const pool = poolModule && (poolModule.default || poolModule);
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -12,6 +13,11 @@ module.exports = async (req, res) => {
   }
 
   try {
+    if (!pool || typeof pool.query !== 'function') {
+      console.error('[DB ERROR] pool not initialized', pool);
+      return res.status(500).json({ error: 'Database not available' });
+    }
+
     const result = await pool.query(
       'SELECT role FROM users WHERE username = $1 AND password = $2',
       [username, password]
