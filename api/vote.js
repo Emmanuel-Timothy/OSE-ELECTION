@@ -4,7 +4,8 @@ const pool = poolModule && (poolModule.default || poolModule);
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'devsecret';
-const MAX_VOTES_PER_USER = 3;
+// Restrict to a single vote
+const MAX_VOTES_PER_USER = 1;
 
 function authHeader(req){
   const a = req.headers.authorization; if(!a) return null;
@@ -22,7 +23,7 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Database not available' });
   }
 
-  // Accept either candidate_id (number) or candidate_ids (array)
+  // Accept single candidate_id (prefer) or candidate_ids array but enforce one
   let { candidate_id, candidate_ids } = req.body || {};
   let candidates = [];
 
@@ -32,48 +33,47 @@ module.exports = async (req, res) => {
     else candidates = [Number(candidate_id)].filter(Boolean);
   }
 
-  // validate
+  // validate - must select exactly one
   if (candidates.length === 0) return res.status(400).json({ error: 'No candidate selected' });
-  // dedupe client-side choices
+  // dedupe
   candidates = [...new Set(candidates)];
-  if (candidates.length > MAX_VOTES_PER_USER) return res.status(400).json({ error: `You can vote for up to ${MAX_VOTES_PER_USER} candidates` });
+  if (candidates.length !== MAX_VOTES_PER_USER) return res.status(400).json({ error: `Select exactly ${MAX_VOTES_PER_USER} candidate` });
 
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    // get existing votes count and candidate_ids
+    // get existing votes
     const existingRes = await client.query('SELECT candidate_id FROM votes WHERE user_id=$1 FOR SHARE', [user.id]);
     const existingCandidates = existingRes.rows.map(r => Number(r.candidate_id));
     const existingCount = existingCandidates.length;
 
-    // prevent voting same candidate again
+    // if already voted at all -> reject (since max is 1)
+    if (existingCount >= MAX_VOTES_PER_USER) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'User has already voted' });
+    }
+
+    // ensure the selected candidate is not already in existing (redundant above but safe)
     const duplicate = candidates.find(c => existingCandidates.includes(c));
     if (duplicate !== undefined) {
       await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'You already voted for one or more selected candidates' });
+      return res.status(400).json({ error: 'You already voted for this candidate' });
     }
 
-    if (existingCount + candidates.length > MAX_VOTES_PER_USER) {
+    // ensure candidate exists
+    const cid = candidates[0];
+    const checkRes = await client.query('SELECT id FROM candidates WHERE id=$1', [cid]);
+    if (checkRes.rowCount !== 1) {
       await client.query('ROLLBACK');
-      return res.status(400).json({ error: `Total votes exceed limit of ${MAX_VOTES_PER_USER}` });
+      return res.status(400).json({ error: 'Candidate is invalid' });
     }
 
-    // Optional: ensure each candidate exists (fail early)
-    const vals = candidates.map((_, i) => `$${i+1}`).join(',');
-    const checkRes = await client.query(`SELECT id FROM candidates WHERE id IN (${vals})`, candidates);
-    if (checkRes.rowCount !== candidates.length) {
-      await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'One or more candidates are invalid' });
-    }
-
-    // insert votes
-    for (const cid of candidates) {
-      await client.query('INSERT INTO votes (user_id, candidate_id) VALUES ($1, $2)', [user.id, cid]);
-    }
+    // insert the single vote
+    await client.query('INSERT INTO votes (user_id, candidate_id) VALUES ($1, $2)', [user.id, cid]);
 
     await client.query('COMMIT');
-    res.json({ ok: true, added: candidates.length, total: existingCount + candidates.length });
+    res.json({ ok: true, added: 1, total: existingCount + 1 });
   } catch (e) {
     await client.query('ROLLBACK');
     console.error(e);

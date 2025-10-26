@@ -7,19 +7,10 @@ async function loadCandidates() {
     if (!Array.isArray(data)) { el.textContent = 'Failed to load candidates'; return; }
     el.innerHTML = data.map(c => `
       <label>
-        <input type="checkbox" name="candidate" value="${c.id}">
+        <input type="radio" name="candidate" value="${c.id}">
         ${c.name} (${c.votes} votes)
       </label><br>
     `).join('');
-    // enforce max selection
-    const checkboxes = el.querySelectorAll('input[type=checkbox]');
-    checkboxes.forEach(cb => cb.addEventListener('change', () => {
-      const checked = el.querySelectorAll('input[type=checkbox]:checked');
-      if (checked.length > MAX) {
-        cb.checked = false;
-        alert('You can select up to ' + MAX + ' candidates');
-      }
-    }));
   } catch (e) {
     document.getElementById('candidates').textContent = 'Error loading';
   }
@@ -27,9 +18,9 @@ async function loadCandidates() {
 
 document.getElementById('voteForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const selected = Array.from(document.querySelectorAll('#candidates input[type=checkbox]:checked')).map(i => Number(i.value));
-  if (selected.length === 0) { document.getElementById('voteResult').textContent = 'Select at least one candidate'; return; }
-  if (selected.length > MAX) { document.getElementById('voteResult').textContent = `Max ${MAX}`; return; }
+  const selected = document.querySelector('#candidates input[type=radio]:checked');
+  if (!selected) { document.getElementById('voteResult').textContent = 'Select a candidate'; return; }
+  const candidate_id = Number(selected.value);
 
   const token = localStorage.getItem('token') || '';
   const res = await fetch('/api/vote', {
@@ -38,7 +29,7 @@ document.getElementById('voteForm').addEventListener('submit', async (e) => {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     },
-    body: JSON.stringify({ candidate_ids: selected })
+    body: JSON.stringify({ candidate_id })
   });
   const j = await res.json();
   document.getElementById('voteResult').textContent = JSON.stringify(j);
