@@ -1,5 +1,7 @@
 const poolModule = require('../db/db');
 const pool = poolModule && (poolModule.default || poolModule);
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'devsecret';
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -19,7 +21,7 @@ module.exports = async (req, res) => {
     }
 
     const result = await pool.query(
-      'SELECT role FROM users WHERE username = $1 AND password = $2',
+      'SELECT id, role FROM users WHERE username = $1 AND password = $2',
       [username, password]
     );
 
@@ -27,8 +29,9 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const role = result.rows[0].role;
-    return res.status(200).json({ role });
+    const user = result.rows[0];
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET);
+    return res.status(200).json({ role: user.role, token });
 
   } catch (err) {
     console.error('[LOGIN ERROR]', err);
