@@ -8,6 +8,22 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Test DB connection first
+  if (!pool) {
+    console.error('[DB ERROR] pool not initialized');
+    return res.status(500).json({ error: 'Database configuration error' });
+  }
+
+  try {
+    const connected = await pool.testConnection();
+    if (!connected) {
+      return res.status(500).json({ error: 'Database connection failed' });
+    }
+  } catch (err) {
+    console.error('[DB CONNECTION ERROR]', err);
+    return res.status(500).json({ error: 'Database connection error' });
+  }
+
   const { username, password } = req.body;
 
   if (!username || !password) {
