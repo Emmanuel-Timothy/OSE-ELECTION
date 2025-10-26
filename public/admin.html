@@ -1,2 +1,31 @@
 <h2>Admin</h2>
 <p>Admin control panel.</p>
+
+<section>
+  <h3>Users</h3>
+  <div id="usersList">Loading users...</div>
+  <form id="createUserForm">
+    <input id="newUsername" placeholder="username" required>
+    <input id="newPassword" placeholder="password" required>
+    <select id="newRole">
+      <option value="murid">murid</option>
+      <option value="guru">guru</option>
+      <option value="parcom">parcom</option>
+      <option value="admin">admin</option>
+    </select>
+    <button type="submit">Create User</button>
+  </form>
+</section>
+
+<section>
+  <h3>Candidates</h3>
+  <div id="candidatesAdminList">Loading candidates...</div>
+  <form id="createCandidateForm">
+    <input id="candidateName" placeholder="Candidate name" required>
+    <button type="submit">Add Candidate</button>
+  </form>
+</section>
+
+<button onclick="logout()">Logout</button>
+
+<script src="js/data.js"></script>

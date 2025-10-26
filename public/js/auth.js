@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (response.ok) {
+        // store credentials locally for subsequent API calls (simple session)
+        localStorage.setItem("auth", JSON.stringify({ username, password, role: data.role }));
         switch (data.role) {
           case "murid": window.location.href = "vote.html"; break;
           case "guru":
@@ -33,4 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMsg.textContent = "Server error. Try again.";
     }
   });
+
+  // Optional: logout helper (can be used from pages)
+  window.logout = () => {
+    localStorage.removeItem("auth");
+    window.location.href = "index.html";
+  };
 });
