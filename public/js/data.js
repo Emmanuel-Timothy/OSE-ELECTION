@@ -1,71 +1,124 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
+
+  // redirect non-admins to index.html
   if (!auth || auth.role !== 'admin') {
     window.location.href = 'index.html';
     return;
   }
 
-  async function api(path, method='GET', body) {
-    const headers = {'Content-Type': 'application/json'};
-    return fetch(path, { method, headers, body: body ? JSON.stringify(Object.assign({}, body, { username: auth.username, password: auth.password })) : undefined })
-      .then(r => r.json().then(j => ({ ok: r.ok, body: j })));
+  // simple API wrapper with error handling
+  async function api(path, method = 'GET', body) {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      const res = await fetch(path, {
+        method,
+        headers,
+        body: body
+          ? JSON.stringify({ ...body, username: auth.username, password: auth.password })
+          : undefined,
+      });
+
+      const json = await res.json().catch(() => ({}));
+      return { ok: res.ok, body: json };
+    } catch (err) {
+      console.error('API Error:', err);
+      return { ok: false, body: { error: 'Network error or invalid response.' } };
+    }
   }
 
+  // 🧍 Load Users
   async function loadUsers() {
-    const res = await api('/api/users');
     const container = document.getElementById('usersList');
-    if (!res.ok) { container.textContent = res.body.error || 'Failed'; return; }
+    if (!container) return;
+
+    container.innerHTML = 'Loading users...';
+    const res = await api('/api/users');
+    if (!res.ok) {
+      container.textContent = res.body.error || 'Failed to load users';
+      return;
+    }
+
     container.innerHTML = res.body.map(u => `
-      <div>
-        ${u.id} - ${u.username} (${u.role})
-        <button data-id="${u.id}" class="delUser">Delete</button>
+      <div class="user-item">
+        <strong>${u.id}</strong> - ${u.username} (${u.role})
+        <button data-id="${u.id}" class="delUser">🗑️ Delete</button>
       </div>
     `).join('');
-    Array.from(document.querySelectorAll('.delUser')).forEach(b => {
-      b.addEventListener('click', async () => {
-        await api('/api/users', 'DELETE', { id: Number(b.dataset.id) });
+
+    document.querySelectorAll('.delUser').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this user?')) return;
+        const delRes = await api('/api/users', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!delRes.ok) alert(delRes.body.error || 'Failed to delete user');
         loadUsers();
       });
     });
   }
 
   async function loadCandidates() {
-    const res = await api('/api/candidates');
     const container = document.getElementById('candidatesAdminList');
-    if (!res.ok) { container.textContent = res.body.error || 'Failed'; return; }
+    if (!container) return;
+
+    container.innerHTML = 'Loading candidates...';
+    const res = await api('/api/candidates');
+    if (!res.ok) {
+      container.textContent = res.body.error || 'Failed to load candidates';
+      return;
+    }
+
     container.innerHTML = res.body.map(c => `
-      <div>
-        ${c.id} - ${c.name}
-        <button data-id="${c.id}" class="delCand">Delete</button>
+      <div class="candidate-item">
+        <strong>${c.id}</strong> - ${c.name}
+        <button data-id="${c.id}" class="delCand">🗑️ Delete</button>
       </div>
     `).join('');
-    Array.from(document.querySelectorAll('.delCand')).forEach(b => {
-      b.addEventListener('click', async () => {
-        await api('/api/candidates', 'DELETE', { id: Number(b.dataset.id) });
+
+    document.querySelectorAll('.delCand').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this candidate?')) return;
+        const delRes = await api('/api/candidates', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!delRes.ok) alert(delRes.body.error || 'Failed to delete candidate');
         loadCandidates();
       });
     });
   }
 
-  document.getElementById('createUserForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('newUsername').value.trim();
-    const password = document.getElementById('newPassword').value.trim();
-    const role = document.getElementById('newRole').value;
-    await api('/api/users', 'POST', { username, password, role });
-    document.getElementById('newUsername').value = '';
-    document.getElementById('newPassword').value = '';
-    loadUsers();
-  });
+  const userForm = document.getElementById('createUserForm');
+  if (userForm) {
+    userForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+      const role = document.getElementById('newRole').value;
 
-  document.getElementById('createCandidateForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('candidateName').value.trim();
-    await api('/api/candidates', 'POST', { name });
-    document.getElementById('candidateName').value = '';
-    loadCandidates();
-  });
+      if (!username || !password) return alert('Please fill in all fields.');
 
+      const res = await api('/api/users', 'POST', { username, password, role });
+      if (!res.ok) alert(res.body.error || 'Failed to create user');
+
+      userForm.reset();
+      loadUsers();
+    });
+  }
+
+  const candForm = document.getElementById('createCandidateForm');
+  if (candForm) {
+    candForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('candidateName').value.trim();
+
+      if (!name) return alert('Please enter a candidate name.');
+
+      const res = await api('/api/candidates', 'POST', { name });
+      if (!res.ok) alert(res.body.error || 'Failed to create candidate');
+
+      candForm.reset();
+      loadCandidates();
+    });
+  }
+
+  // Initial load
   await loadUsers();
   await loadCandidates();
 });
