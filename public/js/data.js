@@ -1,17 +1,18 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
+  // Redirect if not admin
   if (!auth || auth.role !== 'admin') {
     window.location.href = 'index.html';
     return;
   }
 
-  // universal API handler
+  // Universal API helper
   async function api(path, method = 'GET', body) {
     try {
       const headers = { 'Content-Type': 'application/json' };
 
-      // send admin creds separately for verification (not overwriting body)
+      // Send admin credentials separately
       const payload = body
         ? { ...body, adminUser: auth.username, adminPass: auth.password }
         : { adminUser: auth.username, adminPass: auth.password };
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const res = await fetch(path, {
         method,
         headers,
-        body: ['GET'].includes(method) ? undefined : JSON.stringify(payload),
+        body: method === 'GET' ? undefined : JSON.stringify(payload),
       });
 
       const json = await res.json().catch(() => ({}));
@@ -30,13 +31,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // load users
+  // Load users
   async function loadUsers() {
     const container = document.getElementById('usersList');
     if (!container) return;
     container.textContent = 'Loading...';
+
     const res = await api('/api/users');
-    if (!res.ok) return (container.textContent = res.body.error || 'Failed to load');
+    if (!res.ok) {
+      container.textContent = res.body.error || 'Failed to load users';
+      return;
+    }
 
     container.innerHTML = res.body
       .map(
@@ -51,19 +56,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.delUser').forEach((btn) =>
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this user?')) return;
-        await api('/api/users', 'DELETE', { id: Number(btn.dataset.id) });
+        const del = await api('/api/users', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!del.ok) alert(del.body.error || 'Failed to delete user');
         loadUsers();
       })
     );
   }
 
-  // load candidates
+  // Load candidates
   async function loadCandidates() {
     const container = document.getElementById('candidatesAdminList');
     if (!container) return;
     container.textContent = 'Loading...';
+
     const res = await api('/api/candidates');
-    if (!res.ok) return (container.textContent = res.body.error || 'Failed to load');
+    if (!res.ok) {
+      container.textContent = res.body.error || 'Failed to load candidates';
+      return;
+    }
 
     container.innerHTML = res.body
       .map(
@@ -78,37 +88,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.delCand').forEach((btn) =>
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this candidate?')) return;
-        await api('/api/candidates', 'DELETE', { id: Number(btn.dataset.id) });
+        const del = await api('/api/candidates', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!del.ok) alert(del.body.error || 'Failed to delete candidate');
         loadCandidates();
       })
     );
   }
 
-  // create new user
+  // Create new user
   document.getElementById('createUserForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('newUsername').value.trim();
     const password = document.getElementById('newPassword').value.trim();
     const role = document.getElementById('newRole').value;
-    if (!username || !password) return alert('Please fill in all fields');
 
-    await api('/api/users', 'POST', { username, password, role });
+    if (!username || !password) return alert('Please fill all fields.');
+
+    const res = await api('/api/users', 'POST', { username, password, role });
+    if (!res.ok) alert(res.body.error || 'Failed to create user');
+
     e.target.reset();
     loadUsers();
   });
 
-  // create new candidate
+  // Create new candidate
   document.getElementById('createCandidateForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('candidateName').value.trim();
-    if (!name) return alert('Please enter a candidate name.');
 
-    await api('/api/candidates', 'POST', { name });
+    if (!name) return alert('Please enter candidate name.');
+
+    const res = await api('/api/candidates', 'POST', { name });
+    if (!res.ok) alert(res.body.error || 'Failed to create candidate');
+
     e.target.reset();
     loadCandidates();
   });
 
-  // initial load
+  // Initial load
   await loadUsers();
   await loadCandidates();
 });
