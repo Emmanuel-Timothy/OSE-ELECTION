@@ -6,15 +6,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Unified API call function
+  // API utility function
   async function api(path, method = 'GET', body) {
     try {
       const headers = { 'Content-Type': 'application/json' };
 
-      // Attach admin auth credentials only if they’re not overriding user input
+      // Always send admin creds separately
       const payload = body
-        ? { username: auth.username, password: auth.password, ...body }
-        : { username: auth.username, password: auth.password };
+        ? { authUsername: auth.username, authPassword: auth.password, ...body }
+        : { authUsername: auth.username, authPassword: auth.password };
 
       const res = await fetch(path, {
         method,
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Load users list
+  // Load all users
   async function loadUsers() {
     const container = document.getElementById('usersList');
     if (!container) return;
@@ -45,10 +45,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = res.body
       .map(
         (u) => `
-      <div>
-        ${u.id} - ${u.username} (${u.role})
-        <button data-id="${u.id}" class="delUser">Delete</button>
-      </div>`
+        <div>
+          ${u.id} - ${u.username} (${u.role})
+          <button data-id="${u.id}" class="delUser">Delete</button>
+        </div>`
       )
       .join('');
 
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
   }
 
-  // Load candidates list
+  // Load all candidates
   async function loadCandidates() {
     const container = document.getElementById('candidatesAdminList');
     if (!container) return;
@@ -77,10 +77,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = res.body
       .map(
         (c) => `
-      <div>
-        ${c.id} - ${c.name}
-        <button data-id="${c.id}" class="delCand">Delete</button>
-      </div>`
+        <div>
+          ${c.id} - ${c.name}
+          <button data-id="${c.id}" class="delCand">Delete</button>
+        </div>`
       )
       .join('');
 
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
   }
 
-  // Create new user
+  // Create a new user
   const userForm = document.getElementById('createUserForm');
   if (userForm) {
     userForm.addEventListener('submit', async (e) => {
@@ -104,7 +104,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const role = document.getElementById('newRole').value;
       if (!username || !password) return alert('Please fill in all fields.');
 
-      const res = await api('/api/users', 'POST', { newUser: username, newPass: password, role });
+      // Send new user info separately
+      const res = await api('/api/users', 'POST', { username, password, role });
       if (!res.ok) alert(res.body.error || 'Failed to create user');
 
       userForm.reset();
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Create new candidate
+  // Create a new candidate
   const candForm = document.getElementById('createCandidateForm');
   if (candForm) {
     candForm.addEventListener('submit', async (e) => {

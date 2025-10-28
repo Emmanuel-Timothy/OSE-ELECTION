@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
       const ok = await requireAdmin(req.body);
       if (!ok) return res.status(403).json({ error: 'Admin only' });
-      const { username, password, role } = req.body;
+      const { authUsername, authPassword, username, password, role } = req.body;
       if (!username || !password) return res.status(400).json({ error: 'Missing fields' });
       const insert = await pool.query('INSERT INTO users (username, password, role) VALUES ($1, $2, $3) RETURNING id, username, role', [username, password, role || null]);
       return res.status(200).json(insert.rows[0]);
