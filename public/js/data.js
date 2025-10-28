@@ -1,21 +1,20 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const auth = JSON.parse(localStorage.getItem("auth") || "null");
 
-  // Redirect if not admin
   if (!auth || auth.role !== 'admin') {
     window.location.href = 'index.html';
     return;
   }
 
-  // Universal API helper
+  // Unified API call function
   async function api(path, method = 'GET', body) {
     try {
       const headers = { 'Content-Type': 'application/json' };
 
-      // Send admin credentials separately
+      // Attach admin auth credentials only if they’re not overriding user input
       const payload = body
-        ? { ...body, adminUser: auth.username, adminPass: auth.password }
-        : { adminUser: auth.username, adminPass: auth.password };
+        ? { username: auth.username, password: auth.password, ...body }
+        : { username: auth.username, password: auth.password };
 
       const res = await fetch(path, {
         method,
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Load users
+  // Load users list
   async function loadUsers() {
     const container = document.getElementById('usersList');
     if (!container) return;
@@ -56,14 +55,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.delUser').forEach((btn) =>
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this user?')) return;
-        const del = await api('/api/users', 'DELETE', { id: Number(btn.dataset.id) });
-        if (!del.ok) alert(del.body.error || 'Failed to delete user');
+        const res = await api('/api/users', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!res.ok) alert(res.body.error || 'Failed to delete user');
         loadUsers();
       })
     );
   }
 
-  // Load candidates
+  // Load candidates list
   async function loadCandidates() {
     const container = document.getElementById('candidatesAdminList');
     if (!container) return;
@@ -88,44 +87,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.delCand').forEach((btn) =>
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this candidate?')) return;
-        const del = await api('/api/candidates', 'DELETE', { id: Number(btn.dataset.id) });
-        if (!del.ok) alert(del.body.error || 'Failed to delete candidate');
+        const res = await api('/api/candidates', 'DELETE', { id: Number(btn.dataset.id) });
+        if (!res.ok) alert(res.body.error || 'Failed to delete candidate');
         loadCandidates();
       })
     );
   }
 
   // Create new user
-  document.getElementById('createUserForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('newUsername').value.trim();
-    const password = document.getElementById('newPassword').value.trim();
-    const role = document.getElementById('newRole').value;
+  const userForm = document.getElementById('createUserForm');
+  if (userForm) {
+    userForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+      const role = document.getElementById('newRole').value;
+      if (!username || !password) return alert('Please fill in all fields.');
 
-    if (!username || !password) return alert('Please fill all fields.');
+      const res = await api('/api/users', 'POST', { newUser: username, newPass: password, role });
+      if (!res.ok) alert(res.body.error || 'Failed to create user');
 
-    const res = await api('/api/users', 'POST', { username, password, role });
-    if (!res.ok) alert(res.body.error || 'Failed to create user');
-
-    e.target.reset();
-    loadUsers();
-  });
+      userForm.reset();
+      loadUsers();
+    });
+  }
 
   // Create new candidate
-  document.getElementById('createCandidateForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('candidateName').value.trim();
+  const candForm = document.getElementById('createCandidateForm');
+  if (candForm) {
+    candForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('candidateName').value.trim();
+      if (!name) return alert('Please enter a candidate name.');
 
-    if (!name) return alert('Please enter candidate name.');
+      const res = await api('/api/candidates', 'POST', { name });
+      if (!res.ok) alert(res.body.error || 'Failed to create candidate');
 
-    const res = await api('/api/candidates', 'POST', { name });
-    if (!res.ok) alert(res.body.error || 'Failed to create candidate');
+      candForm.reset();
+      loadCandidates();
+    });
+  }
 
-    e.target.reset();
-    loadCandidates();
-  });
-
-  // Initial load
   await loadUsers();
   await loadCandidates();
 });
