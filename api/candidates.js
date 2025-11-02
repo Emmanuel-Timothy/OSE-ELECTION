@@ -2,8 +2,12 @@ const poolModule = require('../db/db');
 const pool = poolModule && (poolModule.default || poolModule);
 
 async function requireAdmin(body) {
-  if (!body || !body.username || !body.password) return null;
-  const r = await pool.query('SELECT role FROM users WHERE username=$1 AND password=$2', [body.username, body.password]);
+  if (!body) return null;
+  // accept either { username, password } or { authUser, authPass }
+  const username = body.username || body.authUser;
+  const password = body.password || body.authPass;
+  if (!username || !password) return null;
+  const r = await pool.query('SELECT role FROM users WHERE username=$1 AND password=$2', [username, password]);
   if (r.rows.length === 0) return null;
   return r.rows[0].role === 'admin';
 }

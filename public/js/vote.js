@@ -8,18 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const list = document.getElementById("candidatesList");
   const form = document.getElementById("voteForm");
   const msg = document.getElementById("voteMsg");
-  const logoutBtn = document.getElementById("logoutBtn"); // 👈 reference logout button
-
-  // Handle logout click
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("auth"); // remove auth info
-    window.location.href = "index.html"; // redirect back to login page
-  });
 
   // Load candidates dynamically
   async function loadCandidates() {
     const res = await fetch('/api/candidates');
-    const data = await res.json();
+    const data = await res.json().catch(() => ({ error: 'Invalid response' }));
     if (!res.ok) {
       list.textContent = data.error || 'Failed to load';
       return;
@@ -33,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.textContent = '';
+    msg.style.color = ''; // reset color to stylesheet default
     const selected = document.querySelector('input[name="candidate"]:checked');
     if (!selected) {
       msg.textContent = 'Please select a candidate.';
@@ -49,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           candidate_id: Number(selected.value)
         })
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ error: 'Invalid response' }));
       if (!res.ok) {
         msg.textContent = data.error || 'Vote failed';
         return;
@@ -58,6 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       msg.textContent = 'Vote submitted. Thank you.';
       // Disable form to prevent multiple votes
       Array.from(document.querySelectorAll('input')).forEach(i => i.disabled = true);
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
     } catch (err) {
       console.error(err);
       msg.textContent = 'Server error';
