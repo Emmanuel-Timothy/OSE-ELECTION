@@ -6,11 +6,10 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="screen active">
-  <!-- Click to Enter -->
-  <div id="click-to-enter">CLICK TO ENTER</div>
-
-  <!-- Splash Screen -->
-  <div id="splash-screen"></div>
+  <!-- Splash Screen with Click Text -->
+  <div id="splash-screen">
+    <div id="click-to-enter">CLICK TO ENTER</div>
+  </div>
 
   <!-- Login Container -->
   <div class="login-container">
@@ -36,26 +35,19 @@
   <!-- JS -->
   <script src="js/auth.js"></script>
 
-  <!-- Screen Animation Logic -->
+  <!-- Entry Animation Logic -->
   <script>
-    const clickText = document.getElementById("click-to-enter");
     const splash = document.getElementById("splash-screen");
+    const clickText = document.getElementById("click-to-enter");
     const loginContainer = document.querySelector(".login-container");
 
-    // Start sequence when "CLICK TO ENTER" pressed
     clickText.addEventListener("click", () => {
       clickText.classList.add("fade-out");
+      splash.classList.add("fade-out");
       setTimeout(() => {
-        clickText.remove();
-        splash.classList.add("active");
-        setTimeout(() => {
-          splash.classList.add("fade-out");
-          setTimeout(() => {
-            splash.remove();
-            loginContainer.classList.add("show");
-          }, 1000);
-        }, 2000);
-      }, 800);
+        splash.remove();
+        loginContainer.classList.add("show");
+      }, 1200); // smooth transition
     });
   </script>
 </body>
