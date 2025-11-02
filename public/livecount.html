@@ -1,7 +1,20 @@
-<h2>Live Count</h2>
-<p>This is where live vote counts will be displayed for panitia.</p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Count - OSE Election</title>
+  <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body class="screen active">
+  <div class="container">
+    <h2 class="title">LIVE COUNT</h2>
+    <p class="subtitle">Pantau perolehan suara secara real-time.</p>
 
-<div id="counts">Loading...</div>
-<button onclick="logout()">Logout</button>
+    <div id="counts" class="data-list">Loading...</div>
 
-<script src="js/livecount.js"></script>
+    <button onclick="logout()" class="btn danger">Logout</button>
+  </div>
+
+  <script src="js/livecount.js"></script>
+</body>
+</html>

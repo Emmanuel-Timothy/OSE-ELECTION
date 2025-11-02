@@ -1,8 +1,21 @@
-<h2>Supervision Dashboard</h2>
-<p>Supervisors (Guru/Parcom) can view election process and statistics here.</p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Supervision Dashboard - OSE Election</title>
+  <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body class="screen active">
+  <div class="container">
+    <h2 class="title">SUPERVISION DASHBOARD</h2>
+    <p class="subtitle">Pantau proses dan statistik pemilihan.</p>
 
-<div id="superviseCounts">Loading counts...</div>
-<div id="voteDetails"></div>
-<button onclick="logout()">Logout</button>
+    <div id="superviseCounts" class="data-list">Loading counts...</div>
+    <div id="voteDetails" class="data-list"></div>
 
-<script src="js/livecount.js"></script>
+    <button onclick="logout()" class="btn danger">Logout</button>
+  </div>
+
+  <script src="js/livecount.js"></script>
+</body>
+</html>

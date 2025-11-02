@@ -1,18 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <title>OSE Election Login</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <h2>OSE Election System Login</h2>
-  <form id="loginForm">
-    <input type="text" id="username" placeholder="Username" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
-  </form>
-  <p id="error" style="color: red;"></p>
+<body class="screen active">
+  <!-- Splash Screen -->
+  <div id="splash-screen"></div>
+
+  <!-- Login Container -->
+  <div class="login-container">
+    <h2>OSE ELECTION SYSTEM</h2>
+    <form id="loginForm" class="form">
+      <div class="input-group">
+        <label for="username">USERNAME</label>
+        <input type="text" id="username" placeholder="Masukkan username" required>
+      </div>
+      <div class="input-group">
+        <label for="password">PASSWORD</label>
+        <input type="password" id="password" placeholder="Masukkan password" required>
+      </div>
+      <button type="submit" class="btn primary">LOGIN</button>
+      <p id="error" class="error-text"></p>
+    </form>
+    <div class="info-login">
+      <p>FLIGHT: OSE 2025</p>
+      <p>DATE: DECEMBER 8TH 2025</p>
+    </div>
+  </div>
+
+  <!-- JS -->
   <script src="js/auth.js"></script>
+
+  <!-- Splash Screen Script -->
+  <script>
+    window.addEventListener("load", () => {
+      const splash = document.getElementById("splash-screen");
+      setTimeout(() => {
+        splash.classList.add("fade-out");
+        setTimeout(() => splash.remove(), 1000); // remove after fade
+      }, 2000); // display 2 seconds
+    });
+  </script>
 </body>
 </html>
