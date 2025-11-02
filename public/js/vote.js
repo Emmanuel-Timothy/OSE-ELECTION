@@ -8,7 +8,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const list = document.getElementById("candidatesList");
   const form = document.getElementById("voteForm");
   const msg = document.getElementById("voteMsg");
+  const logoutBtn = document.getElementById("logoutBtn"); // 👈 reference logout button
 
+  // Handle logout click
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("auth"); // remove auth info
+    window.location.href = "index.html"; // redirect back to login page
+  });
+
+  // Load candidates dynamically
   async function loadCandidates() {
     const res = await fetch('/api/candidates');
     const data = await res.json();
@@ -21,11 +29,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     `).join('');
   }
 
+  // 🔹 Handle vote submission
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.textContent = '';
     const selected = document.querySelector('input[name="candidate"]:checked');
-    if (!selected) { msg.textContent = 'Please select a candidate.'; return; }
+    if (!selected) {
+      msg.textContent = 'Please select a candidate.';
+      return;
+    }
 
     try {
       const res = await fetch('/api/vote', {
@@ -44,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       msg.style.color = 'green';
       msg.textContent = 'Vote submitted. Thank you.';
-      // disable form to enforce single vote on client
+      // Disable form to prevent multiple votes
       Array.from(document.querySelectorAll('input')).forEach(i => i.disabled = true);
     } catch (err) {
       console.error(err);
