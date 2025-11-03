@@ -3,7 +3,7 @@ body {
   padding: 0;
   background-color: #1c2833;
   font-family: 'Arial', sans-serif;
-  color: #fff;
+  color: var(--text-light); /* use variable for easier theming */
 }
 
 .screen {
@@ -159,9 +159,9 @@ body {
   --danger-color: #dc3545;
   --bg-dark: #1c2833;
   --bg-card: #2b3a4a;
-  --text-light: #ffffff;
-  --text-muted: #bbbbbb;
-  --border-light: rgba(255, 255, 255, 0.1);
+  --text-light: #e9f2fb;   /* lighter, slightly bluish white for better contrast */
+  --text-muted: #bcd0dd;   /* softer muted text */
+  --border-light: rgba(255, 255, 255, 0.08); /* slightly subtler border */
 }
 
 /* Enhanced Container Styles */
@@ -326,6 +326,7 @@ body {
   background: linear-gradient(90deg, #37393a, #3b4a5f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: var(--text-light); /* fallback when gradient/text-clip isn't supported */
   font-weight: 900;
   margin-bottom: 0.5em;
 }
@@ -334,7 +335,7 @@ body {
   font-weight: bold;
   margin-bottom: 1rem;
   font-size: 1.15em;
-  color: #2a2c47;
+  color: var(--text-light); /* improved readability on dark card */
   letter-spacing: 1px;
 }
 
