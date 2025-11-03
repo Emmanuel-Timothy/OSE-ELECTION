@@ -102,20 +102,55 @@ body {
 }
 
 .btn {
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn.primary {
-  background-color: #5cb85c;
-  color: #fff;
+  background-color: #4CAF50;
+  color: white;
 }
-.btn.primary:hover {
-  background-color: #4cae4c;
+
+.btn.danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #dc3545;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn.danger:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn.danger:active {
+  transform: translateY(0);
+}
+
+.btn.danger .icon {
+  font-size: 1.2em;
 }
 
 /* --- Candidates (vote.html compat) --- */
@@ -128,12 +163,15 @@ body {
 }
 
 .candidate-card {
-  background: #2e4053;
-  border-radius: 8px;
-  width: 250px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(145deg, #344357, #2a3647);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateZ(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.candidate-card:hover {
+  transform: translateY(-5px) translateZ(0);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .candidate-card h3 {
@@ -153,4 +191,45 @@ body {
 
 .vote-button:hover {
   background-color: #c9302c;
+}
+
+/* Ripple Effect for Buttons */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease-out, height 0.3s ease-out;
+}
+
+.btn:active::after {
+  width: 200%;
+  height: 200%;
+}
+
+/* Title Animations */
+.title {
+  animation: titleSlide 0.8s ease-out;
+}
+
+@keyframes titleSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Logout Container */
+.logout-container {
+  margin-top: 30px;
+  text-align: center;
 }

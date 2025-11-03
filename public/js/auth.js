@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Optional: logout helper (can be used from pages)
+  // Improved logout helper (used globally)
   window.logout = () => {
-    localStorage.removeItem("auth");
-    window.location.href = "index.html";
+    localStorage.clear(); // Clear all stored data
+    window.location.replace("index.html"); // Use replace to prevent back navigation
   };
 });
