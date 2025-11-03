@@ -323,7 +323,7 @@ body {
 
 .gate-title {
   font-size: 1.6rem;
-  background: linear-gradient(90deg, #00c3ff, #ffff1c);
+  background: linear-gradient(90deg, #37393a, #3b4a5f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 900;
@@ -334,7 +334,7 @@ body {
   font-weight: bold;
   margin-bottom: 1rem;
   font-size: 1.15em;
-  color: #ffcb00;
+  color: #2a2c47;
   letter-spacing: 1px;
 }
 

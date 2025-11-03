@@ -3,39 +3,45 @@ async function fetchCounts(detail = false) {
   const url = '/api/livecount' + (detail ? '?detail=true' : '');
   const headers = {};
   if (auth && auth.username) {
-    // provide creds for privileged detail endpoint
     headers['Content-Type'] = 'application/json';
+    // send credentials for detail endpoint
+    headers['x-username'] = auth.username;
+    headers['x-password'] = auth.password;
   }
   const res = await fetch(url, { headers });
   const data = await res.json();
+  // Find the correct target element
+  const countsEl = document.getElementById('counts');
+  const superviseEl = document.getElementById('superviseCounts');
   if (!res.ok) {
-    document.getElementById('counts')?.textContent = data.error || 'Failed';
-    document.getElementById('superviseCounts')?.textContent = data.error || 'Failed';
+    if (countsEl) countsEl.textContent = data.error || 'Failed';
+    if (superviseEl) superviseEl.textContent = data.error || 'Failed';
     return;
   }
-
-  const target = document.getElementById('counts') || document.getElementById('superviseCounts');
   if (data.counts) {
-    target.innerHTML = data.counts.map(c => `<div>${c.name}: ${c.votes}</div>`).join('');
+    const html = data.counts.map(c => `<div>${c.name}: ${c.votes}</div>`).join('');
+    if (countsEl) countsEl.innerHTML = html;
+    if (superviseEl) superviseEl.innerHTML = html;
   } else {
-    target.textContent = 'No data';
+    if (countsEl) countsEl.textContent = 'No data';
+    if (superviseEl) superviseEl.textContent = 'No data';
   }
-
   if (detail && data.votes) {
     const det = document.getElementById('voteDetails');
-    det.innerHTML = '<h4>Votes</h4>' + data.votes.map(v => `<div>${v.username} → ${v.candidate_name} @ ${v.created_at}</div>`).join('');
+    if (det) {
+      det.innerHTML = '<h4>Votes</h4>' + data.votes.map(v => `<div>${v.username} → ${v.candidate_name} @ ${v.created_at}</div>`).join('');
+    }
   }
 }
 
-// Auto-refresh counts every 5 seconds
-setInterval(() => fetchCounts(false), 5000);
+// Only auto-refresh on livecount.html and supervise.html
 document.addEventListener('DOMContentLoaded', () => {
-  const auth = JSON.parse(localStorage.getItem("auth") || "null");
-  // If supervisor page, request detail view once
-  if (location.pathname.endsWith('supervise.html')) {
+  const path = location.pathname;
+  if (path.endsWith('livecount.html')) {
+    fetchCounts(false);
+    setInterval(() => fetchCounts(false), 5000);
+  } else if (path.endsWith('supervise.html')) {
     fetchCounts(true);
     setInterval(() => fetchCounts(true), 5000);
-  } else {
-    fetchCounts(false);
   }
 });
