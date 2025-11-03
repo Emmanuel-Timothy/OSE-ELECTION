@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       list.textContent = data.error || 'Failed to load';
       return;
     }
-    // Render each candidate as a box with image, name, vision, mission, and vote button
+    // Render horizontally with separate boxes
     list.innerHTML = data.map((c, idx) => `
       <div class="gate">
         <img src="PH.png" alt="Candidate Image" style="width:100px;border-radius:50%;margin-bottom:1em;">
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Remove default form submit behavior
+  // Prevent default form submit
   form.onsubmit = e => e.preventDefault();
 
   await loadCandidates();
