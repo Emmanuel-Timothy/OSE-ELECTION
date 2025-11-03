@@ -323,7 +323,7 @@ body {
 
 .gate-title {
   font-size: 1.6rem;
-  background: linear-gradient(90deg, #37393a, #3b4a5f);
+  background: linear-gradient(90deg, #ffffff, #cacaca);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--text-light); /* fallback when gradient/text-clip isn't supported */
