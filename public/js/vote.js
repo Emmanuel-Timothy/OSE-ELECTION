@@ -17,48 +17,54 @@ document.addEventListener("DOMContentLoaded", async () => {
       list.textContent = data.error || 'Failed to load';
       return;
     }
-    list.innerHTML = data.map(c => `
-      <label><input type="radio" name="candidate" value="${c.id}"> ${c.name}</label><br>
+    // Render each candidate as a box with image, name, vision, mission, and vote button
+    list.innerHTML = data.map((c, idx) => `
+      <div class="gate">
+        <img src="PH.png" alt="Candidate Image" style="width:100px;border-radius:50%;margin-bottom:1em;">
+        <h2 class="gate-title">GATE ${idx+1}</h2>
+        <p class="candidate-name">${c.name}</p>
+        <h3>Vision</h3>
+        <ul>${(c.vision || []).map(v => `<li>${v}</li>`).join('')}</ul>
+        <h3>Mission</h3>
+        <ul>${(c.mission || []).map(m => `<li>${m}</li>`).join('')}</ul>
+        <button type="button" class="vote-btn" data-candidate="${c.id}">VOTE</button>
+      </div>
     `).join('');
+    // Attach click handler for each vote button
+    Array.from(list.querySelectorAll('.vote-btn')).forEach(btn => {
+      btn.onclick = async () => {
+        if (form.querySelector('button[type="submit"]')) form.querySelector('button[type="submit"]').disabled = true;
+        msg.textContent = '';
+        const candidateId = Number(btn.getAttribute('data-candidate'));
+        try {
+          const res = await fetch('/api/vote', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              username: auth.username,
+              password: auth.password,
+              candidate_id: candidateId
+            })
+          });
+          const data = await res.json().catch(() => ({ error: 'Invalid response' }));
+          if (!res.ok) {
+            msg.textContent = data.error || 'Vote failed';
+            return;
+          }
+          msg.style.color = 'green';
+          msg.textContent = 'Vote submitted. Thank you.';
+          // Disable all vote buttons after voting
+          Array.from(list.querySelectorAll('.vote-btn')).forEach(b => b.disabled = true);
+        } catch (err) {
+          console.error(err);
+          msg.textContent = 'Server error';
+        }
+      };
+    });
   }
 
-  // 🔹 Handle vote submission
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = '';
-    msg.style.color = ''; // reset color to stylesheet default
-    const selected = document.querySelector('input[name="candidate"]:checked');
-    if (!selected) {
-      msg.textContent = 'Please select a candidate.';
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/vote', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: auth.username,
-          password: auth.password,
-          candidate_id: Number(selected.value)
-        })
-      });
-      const data = await res.json().catch(() => ({ error: 'Invalid response' }));
-      if (!res.ok) {
-        msg.textContent = data.error || 'Vote failed';
-        return;
-      }
-      msg.style.color = 'green';
-      msg.textContent = 'Vote submitted. Thank you.';
-      // Disable form to prevent multiple votes
-      Array.from(document.querySelectorAll('input')).forEach(i => i.disabled = true);
-      const submitBtn = form.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
-    } catch (err) {
-      console.error(err);
-      msg.textContent = 'Server error';
-    }
-  });
+  // Remove default form submit behavior
+  form.onsubmit = e => e.preventDefault();
 
   await loadCandidates();
 });
