@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       list.textContent = data.error || 'Failed to load';
       return;
     }
-    // Render horizontally with separate boxes
+    // Render horizontally with flex
     list.innerHTML = data.map((c, idx) => `
-      <div class="gate">
-        <img src="PH.png" alt="Candidate Image" style="width:100px;border-radius:50%;margin-bottom:1em;">
+      <div class="gate candidate-box">
+        <img src="PH.png" alt="Candidate Image" class="candidate-img">
         <h2 class="gate-title">GATE ${idx+1}</h2>
         <p class="candidate-name">${c.name}</p>
         <h3>Vision</h3>
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Prevent default form submit
+  // Remove default form submit behavior
   form.onsubmit = e => e.preventDefault();
 
   await loadCandidates();
