@@ -6,19 +6,19 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="screen active">
-  <div class="container">
+  <div class="container flight-info">
     <h2 class="title">LIVE COUNT</h2>
-    <p class="subtitle">Pantau perolehan suara secara real-time.</p>
-
-    <div id="counts" class="data-list">Loading...</div>
-
+    <h3 class="subtitle">PASSENGER ON BOARD</h3>
+    <div class="bar-container" id="counts">
+      <!-- Candidate bars will be rendered here by JS -->
+      Loading...
+    </div>
     <div class="logout-container">
       <button onclick="logout()" class="btn danger">
         <span class="icon">🚪</span> Logout
       </button>
     </div>
   </div>
-
   <script src="js/livecount.js"></script>
 </body>
 </html>

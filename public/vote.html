@@ -9,19 +9,51 @@
   <div class="container">
     <h2 class="title">PEMILIHAN KAPTEN OSE 2025</h2>
     <p class="subtitle">Silakan pilih salah satu kandidat di bawah ini.</p>
-
     <form id="voteForm" class="vote-form">
-      <div id="candidatesList" class="candidates-container">Loading candidates...</div>
+      <div id="candidatesList" class="gate-container">
+        <!-- Candidate gates will be rendered here by JS -->
+        Loading candidates...
+      </div>
       <p id="voteMsg" class="error-text"></p>
       <button type="submit" class="btn primary">Submit Vote</button>
     </form>
-
     <div class="logout-container">
       <button onclick="logout()" class="btn danger">
         <span class="icon">🚪</span> Logout
       </button>
     </div>
   </div>
+  <script>
+    // Example rendering logic for candidates (replace with your JS logic)
+    // This should be moved to js/vote.js for real use
+    document.addEventListener('DOMContentLoaded', function() {
+      const candidates = [
+        { id: 1, name: "Candidate 1", vision: ["Vision 1"], mission: ["Mission 1"] },
+        { id: 2, name: "Candidate 2", vision: ["Vision 2"], mission: ["Mission 2"] },
+        { id: 3, name: "Candidate 3", vision: ["Vision 3"], mission: ["Mission 3"] }
+      ];
+      const container = document.getElementById('candidatesList');
+      container.innerHTML = '';
+      candidates.forEach((c, idx) => {
+        container.innerHTML += `
+          <div class="gate">
+            <img src="PH.png" alt="Candidate Image" style="width:100px;border-radius:50%;margin-bottom:1em;">
+            <h2 class="gate-title">GATE ${idx+1}</h2>
+            <p class="candidate-name">${c.name}</p>
+            <h3>Vision</h3>
+            <ul>${c.vision.map(v => `<li>${v}</li>`).join('')}</ul>
+            <h3>Mission</h3>
+            <ul>${c.mission.map(m => `<li>${m}</li>`).join('')}</ul>
+            <button type="button" class="vote-btn" onclick="selectCandidate(${c.id})">VOTE</button>
+          </div>
+        `;
+      });
+    });
+    function selectCandidate(id) {
+      // Your selection logic here
+      document.getElementById('voteMsg').textContent = `Selected candidate #${id}`;
+    }
+  </script>
   <script src="js/vote.js"></script>
 </body>
 </html>
