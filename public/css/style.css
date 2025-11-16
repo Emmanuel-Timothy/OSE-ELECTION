@@ -37,7 +37,7 @@ body {
 
 /* Flickering "CLICK TO ENTER" */
 #click-to-enter {
-  color: #ff4fa8;
+  color: #ffffff;
   font-size: 1.8em;
   font-weight: bold;
   text-shadow: 0 0 8px #ff4fa8, 0 0 15px #ff4fa8, 0 0 25px #e63e90;
