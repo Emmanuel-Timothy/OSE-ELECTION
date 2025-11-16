@@ -444,3 +444,46 @@ tr:hover td {
 .info-login p {
   margin: 5px 0;
 }
+
+/* Top-left logo styles */
+.logo-bar {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  display: flex;
+  flex-direction: row; /* horizontal */
+  gap: 32px;           /* more space between logos */
+  z-index: 10001;
+}
+
+.logo-bar img {
+  width: 110px;        /* bigger logo */
+  height: auto;
+  transition: opacity 0.2s, filter 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.logo-bar img.logo-hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logo-bar .logo-group {
+  position: relative;
+  width: 110px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-bar .logo-group:hover .logo-default {
+  opacity: 0;
+}
+.logo-bar .logo-group:hover .logo-hover {
+  opacity: 1;
+}
