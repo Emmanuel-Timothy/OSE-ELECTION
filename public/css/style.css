@@ -487,3 +487,33 @@ tr:hover td {
 .logo-bar .logo-group:hover .logo-hover {
   opacity: 1;
 }
+
+/* Fullscreen Button */
+.fullscreen-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #ff4fa8 0%, #e63e90 100%);
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 1.4em;
+  cursor: pointer;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 79, 168, 0.4);
+}
+
+.fullscreen-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255, 79, 168, 0.6);
+}
+
+.fullscreen-btn:active {
+  transform: scale(0.95);
+}
