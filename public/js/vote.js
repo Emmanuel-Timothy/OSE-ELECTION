@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const list = document.getElementById("candidatesList");
   const form = document.getElementById("voteForm");
   const msg = document.getElementById("voteMsg");
+  const modal = document.getElementById("voteModal");
 
   // Load candidates dynamically
   async function loadCandidates() {
@@ -51,8 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             msg.textContent = data.error || 'Vote failed';
             return;
           }
-          msg.style.color = 'green';
-          msg.textContent = 'Vote submitted. Thank you.';
+          // Show success modal
+          modal.classList.add('show');
           // Disable all vote buttons after voting
           Array.from(list.querySelectorAll('.vote-btn')).forEach(b => b.disabled = true);
         } catch (err) {
