@@ -10,24 +10,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   const msg = document.getElementById("voteMsg");
   const modal = document.getElementById("voteModal");
 
+  // Hardcoded candidates
+  const candidates = [
+    {
+      id: 1,
+      name: "Isabella x Shannon",
+      vision: "A community where students express their ideas and creativity, fostering character development through innovation, collaboration, and environmental awareness.",
+      mission: [
+        "Strengthen student representation, transparency, and connection with school events.",
+        "Promote fairness, collaboration, and engagement among all students.",
+        "Encourage the 5C 1E values: create, collaborate, care, communicate, think critically, and empower others."
+      ]
+    },
+    {
+      id: 2,
+      name: "Alea x Cing-cing",
+      vision: "To build a structured, professional, and approachable organization that strengthens communication, improves internal systems, and develops sustainable initiatives for a more effective and impactful OSE.",
+      mission: [
+        "Enhance members' responsibility and leadership skills.",
+        "Foster open and transparent communication.",
+        "Develop meaningful student projects.",
+        "Ensure all initiatives align with core values and benefit the school community."
+      ]
+    }
+  ];
+
   // Load candidates dynamically
   async function loadCandidates() {
-    const res = await fetch('/api/candidates');
-    const data = await res.json().catch(() => ({ error: 'Invalid response' }));
-    if (!res.ok) {
-      list.textContent = data.error || 'Failed to load';
-      return;
-    }
-    // Render horizontally with flex
-    list.innerHTML = data.map((c, idx) => `
+    list.innerHTML = candidates.map((c, idx) => `
       <div class="gate candidate-box">
         <img src="PH.png" alt="Candidate Image" class="candidate-img">
         <h2 class="gate-title">GATE ${idx+1}</h2>
         <p class="candidate-name">${c.name}</p>
         <h3>Vision</h3>
-        <ul>${(c.vision || []).map(v => `<li>${v}</li>`).join('')}</ul>
+        <p>${c.vision}</p>
         <h3>Mission</h3>
-        <ul>${(c.mission || []).map(m => `<li>${m}</li>`).join('')}</ul>
+        <ul>${c.mission.map(m => `<li>${m}</li>`).join('')}</ul>
         <button type="button" class="vote-btn" data-candidate="${c.id}">VOTE</button>
       </div>
     `).join('');
