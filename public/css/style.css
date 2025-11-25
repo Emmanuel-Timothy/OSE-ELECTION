@@ -88,7 +88,7 @@ body {
 }
 
 .input-group input {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   background-color: #0c0f12;
   border: 2px solid #6b2d96;
@@ -96,6 +96,9 @@ body {
   color: #ffffff;
   margin-top: 5px;
   transition: all 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .input-group input:focus {
@@ -230,7 +233,7 @@ body {
 
 .input-group input,
 .input-group select {
-  width: 100%;
+  width: 95%;
   padding: 12px;
   background: #0c0f12;
   border: 2px solid #6b2d96;
