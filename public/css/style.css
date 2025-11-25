@@ -330,6 +330,7 @@ body {
   min-width: 280px;
   max-width: 350px;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  text-align: center;
 }
 
 .candidate-box:hover {
@@ -600,4 +601,30 @@ tr:hover td {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.candidate-box h3 {
+  text-align: center;
+  color: #ff9a3c;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.candidate-box p {
+  text-align: center;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.candidate-box ul {
+  text-align: center;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.candidate-box ul li {
+  color: #ffffff;
+  margin: 0.5rem 0;
+  line-height: 1.4;
 }
