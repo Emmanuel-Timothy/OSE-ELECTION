@@ -351,6 +351,7 @@ body {
   margin-bottom: 1em;
   border: 4px solid #ff4fa8;
   box-shadow: 0 0 15px rgba(255, 79, 168, 0.4);
+  transform: scaleX(-1);
 }
 
 .gate-title {
