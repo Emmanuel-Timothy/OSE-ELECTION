@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadCandidates() {
     list.innerHTML = candidates.map((c, idx) => `
       <div class="gate candidate-box">
-        <img src="public\asset\Candidate${idx+1}.JPG" alt="Candidate Image" class="candidate-img">
+        <img src="public/asset/Candidate${idx+1}.JPG" alt="Candidate Image" class="candidate-img">
         <h2 class="gate-title">GATE ${idx+1}</h2>
         <p class="candidate-name">${c.name}</p>
         <h3>Vision</h3>
