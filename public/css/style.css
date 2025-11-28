@@ -343,8 +343,8 @@ body {
 }
 
 .candidate-img {
-  width: 160px;
-  height: 160px;
+  width: 240px;
+  height: 240px;
   object-fit: cover;
   object-position: center 30%;
   border-radius: 50%;
