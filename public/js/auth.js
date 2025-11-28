@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("auth", JSON.stringify({ username, password, role: data.role }));
         switch (data.role) {
           case "murid": window.location.href = "vote.html"; break;
-          case "guru":
+          case "guru": window.location.href = "livecount.html"; break;
           case "parcom": window.location.href = "supervise.html"; break;
           case "admin": window.location.href = "admin.html"; break;
           default: errorMsg.textContent = "Unknown role.";
