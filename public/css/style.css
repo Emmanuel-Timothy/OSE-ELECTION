@@ -346,6 +346,7 @@ body {
   width: 110px;
   height: 110px;
   object-fit: cover;
+  object-position: center 30%;
   border-radius: 50%;
   margin-bottom: 1em;
   border: 3px solid #ff4fa8;
