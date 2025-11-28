@@ -14,16 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const candidates = [
     {
       id: 1,
-      name: "Isabella x Shannon",
-      vision: "A community where students express their ideas and creativity, fostering character development through innovation, collaboration, and environmental awareness.",
-      mission: [
-        "Strengthen student representation, transparency, and connection with school events.",
-        "Promote fairness, collaboration, and engagement among all students.",
-        "Encourage the 5C 1E values: create, collaborate, care, communicate, think critically, and empower others."
-      ]
-    },
-    {
-      id: 2,
       name: "Alea x Cing-cing",
       vision: "To build a structured, professional, and approachable organization that strengthens communication, improves internal systems, and develops sustainable initiatives for a more effective and impactful OSE.",
       mission: [
@@ -31,6 +21,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Foster open and transparent communication.",
         "Develop meaningful student projects.",
         "Ensure all initiatives align with core values and benefit the school community."
+      ]
+    },
+    {
+      id: 2,
+      name: "Isabella x Shannon",
+      vision: "A community where students express their ideas and creativity, fostering character development through innovation, collaboration, and environmental awareness.",
+      mission: [
+        "Strengthen student representation, transparency, and connection with school events.",
+        "Promote fairness, collaboration, and engagement among all students.",
+        "Encourage the 5C 1E values: create, collaborate, care, communicate, think critically, and empower others."
       ]
     }
   ];
