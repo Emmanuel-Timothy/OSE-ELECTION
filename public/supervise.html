@@ -2,24 +2,10 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Supervision Dashboard - OSE Election</title>
+  <title>Live Count - OSE Election</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="screen active">
-  <div class="container">
-    <h2 class="title">SUPERVISION DASHBOARD</h2>
-    <p class="subtitle">Pantau proses dan statistik pemilihan.</p>
-
-    <div id="superviseCounts" class="data-list">Loading counts...</div>
-    <div id="voteDetails" class="data-list"></div>
-
-    <div class="logout-container">
-      <button onclick="logout()" class="btn danger">
-        <span class="icon">🚪</span> Logout
-      </button>
-    </div>
-  </div>
-
   <!-- Logo Bar Top Left -->
   <div class="logo-bar">
     <div class="logo-group" style="position:relative;">
@@ -31,7 +17,23 @@
       <img src="asset/Logo4.png" class="logo-hover" alt="Logo 4">
     </div>
   </div>
-  <!-- ...existing code... -->
+  <div class="container flight-info">
+    <h2 class="title">LIVE COUNT</h2>
+    <h3 class="subtitle">PASSENGER ON BOARD</h3>
+    <div class="bar-container" id="counts">
+      <!-- Candidate bars will be rendered here by JS -->
+      Loading...
+    </div>
+    <div id="voteDetails"></div>
+    <div class="logout-container">
+      <button id="refreshBtn" class="btn primary">
+        <span class="icon">🔄</span> Refresh
+      </button>
+      <button onclick="logout()" class="btn danger">
+        <span class="icon">🚪</span> Logout
+      </button>
+    </div>
+  </div>
 
   <!-- Fullscreen Button -->
   <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
