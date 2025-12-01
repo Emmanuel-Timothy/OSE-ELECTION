@@ -14,10 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const candidates = [
     {
       id: 1,
-      name: [
-        "Azalea x Jessie",
-        "Alea x Cing-cing"
-      ],
+      name: "Azalea x Jessie",
       vision: "To build a structured, professional, and approachable organization that strengthens communication, improves internal systems, and develops sustainable initiatives for a more effective and impactful OSE.",
       mission: [
         "Enhance members' responsibility and leadership skills.",
