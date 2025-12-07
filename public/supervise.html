@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Live Count - OSE Election</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="screen active">
   <!-- Logo Bar Top Left -->
@@ -17,14 +18,25 @@
       <img src="asset/Logo4.png" class="logo-hover" alt="Logo 4">
     </div>
   </div>
-  <div class="container flight-info">
+  <div class="container flight-info chart-container-main">
     <h2 class="title">LIVE COUNT</h2>
     <h3 class="subtitle">PASSENGER ON BOARD</h3>
-    <div class="bar-container" id="counts">
-      <!-- Candidate bars will be rendered here by JS -->
-      Loading...
+    
+    <!-- Chart Section -->
+    <div class="chart-wrapper">
+      <canvas id="voteChart"></canvas>
     </div>
-    <div id="voteDetails"></div>
+    
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div id="candidateStats" class="candidate-stats-grid"></div>
+    </div>
+    
+    <!-- Vote Details Section -->
+    <div id="voteDetailsContainer" class="vote-details-container">
+      <div id="voteDetails"></div>
+    </div>
+    
     <div class="logout-container">
       <button id="refreshBtn" class="btn primary">
         <span class="icon">🔄</span> Refresh
