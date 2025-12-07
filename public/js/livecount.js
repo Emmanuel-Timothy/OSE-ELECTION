@@ -106,7 +106,7 @@ function updateStats(counts) {
   
   const statsHtml = sortedCounts.map((c, idx) => {
     const percentage = totalVotes > 0 ? ((c.votes / totalVotes) * 100).toFixed(1) : 0;
-    const isLeading = idx === 0;
+    const isLeading = idx === 0 && (sortedCounts.length === 1 || sortedCounts[0].votes > sortedCounts[1].votes);
     
     return `
       <div class="stat-card ${isLeading ? 'leading' : ''}">
