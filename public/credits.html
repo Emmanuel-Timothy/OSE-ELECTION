@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>OSE Election Credits</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="screen active">
+  <!-- Credits Container -->
+  <div class="container credits-page">
+    <div class="credits-header">
+      <h1 class="title">PROJECT CREDITS</h1>
+      <p class="subtitle">OSE ELECTION SYSTEM 2026</p>
+    </div>
+
+    <!-- Teacher Box -->
+    <div class="teacher-box">
+      <h2>TEACHER</h2>
+      <div class="members-list">
+        <p class="member-name leader-name teacher-name">Yoel Aldo Moga</p>
+      </div>
+    </div>
+
+    <!-- Credits Content -->
+    <div class="credits-content">
+      <!-- Develop Division (Center) -->
+      <div class="division-box develop-division">
+        <h2 class="division-title">DEVELOP</h2>
+        <div class="members-list">
+          <p class="member-name leader-name">Emmanuel Timothy Budianto</p>
+          <p class="member-name">Alberto Peter Rahangiar</p>
+          <p class="member-name">Benedict Samuel</p>
+          <p class="member-name">Fernando Timothy Darmawan</p>
+          <p class="member-name">Imanda Fahrizal Alamsyah Siswoutomo</p>
+        </div>
+      </div>
+
+      <!-- Deploy Division (Right) -->
+      <div class="division-box deploy-division">
+        <h2 class="division-title">DEPLOY</h2>
+        <div class="members-list">
+          <p class="member-name leader-name">Eleazar Panji Pratama</p>
+          <p class="member-name">Adrian Nanda Pradipta</p>
+          <p class="member-name">Anlivta Vania Estrada</p>
+          <p class="member-name">Nadindra Danish Permata Unguku</p>
+          <p class="member-name">Rakha Rizqi</p>
+        </div>
+      </div>
+
+      <!-- Planning Division (Left) -->
+      <div class="division-box planning-division">
+        <h2 class="division-title">PLANNING</h2>
+        <div class="members-list">
+          <p class="member-name leader-name">Tiani Charisma Putri Ramlan</p>
+          <p class="member-name">Ashley Thalia Evelyn Tombeng</p>
+          <p class="member-name">Claudya Kallita</p>
+          <p class="member-name">Muhammad Rayyan Asmara</p>
+          <p class="member-name">Razka Razello Harianto</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Login Button -->
+    <div class="back-to-login">
+      <button class="btn primary" onclick="goBackToLogin()">BACK TO LOGIN</button>
+    </div>
+  </div>
+
+  <!-- Modal for Emmanuel's Photo -->
+  <div id="photoModal" class="modal-overlay">
+    <div class="modal-content photo-modal">
+      <img id="photoImg" src="asset/HandsomePrince.jpg" alt="Imperator Emmanuel Timothy 'The Meritorious" Budianto of Sleman ">
+      <p id="photoCaption">Imperator Emmanuel Timothy 'The Meritorious" Budianto of Sleman </p>
+    </div>
+  </div>
+
+  <!-- Logo Bar Top Left -->
+  <div class="logo-bar">
+    <div class="logo-group" style="position:relative;">
+      <img src="asset/Logo0.png" class="logo-default" alt="Logo 0">
+      <img src="asset/Logo1.png" class="logo-hover" alt="Logo 1">
+    </div>
+    <div class="logo-group" style="position:relative;">
+      <img src="asset/Logo2.png" class="logo-default" alt="Logo 2">
+      <img src="asset/Logo4.png" class="logo-hover" alt="Logo 4">
+    </div>
+  </div>
+
+  <!-- Fullscreen Button -->
+  <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
+
+  <!-- JS -->
+  <script src="js/fullscreen.js"></script>
+  <script>
+    // Go back to login
+    function goBackToLogin() {
+      window.location.href = "index.html";
+    }
+
+    // Show photo modal when clicking Emmanuel's name
+    const emmanuelName = document.querySelector('.develop-division .leader-name');
+    const photoModal = document.getElementById('photoModal');
+
+    emmanuelName.addEventListener('click', (e) => {
+      e.stopPropagation();
+      photoModal.classList.add('show');
+    });
+
+    // Close modal when clicking outside the content
+    photoModal.addEventListener('click', (e) => {
+      if (e.target === photoModal) {
+        photoModal.classList.remove('show');
+      }
+    });
+
+    // Close modal when pressing Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        photoModal.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

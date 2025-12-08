@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("voteForm");
   const msg = document.getElementById("voteMsg");
   const modal = document.getElementById("voteModal");
+  const logoutContainer = document.querySelector(".logout-container");
 
   // Hardcoded candidates
   const candidates = [
@@ -34,6 +35,44 @@ document.addEventListener("DOMContentLoaded", async () => {
       ]
     }
   ];
+
+  // Check if user has already voted
+  async function checkVoteStatus() {
+    try {
+      const res = await fetch('/api/vote', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: auth.username,
+          password: auth.password,
+          candidate_id: -1 // dummy check
+        })
+      });
+      const data = await res.json().catch(() => ({ error: 'Invalid response' }));
+      
+      // If error message is "User has already voted", show logout button
+      if (data.error && data.error.includes('already voted')) {
+        showAlreadyVotedMessage();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  function showAlreadyVotedMessage() {
+    list.innerHTML = '';
+    form.style.display = 'none';
+    msg.innerHTML = '<p style="color: #ff4fa8; font-size: 1.3em; text-align: center; margin: 30px 0;">You have already voted. Thank you for your participation!</p>';
+    
+    logoutContainer.innerHTML = `
+      <button onclick="logout()" class="btn primary" style="margin-top: 20px;">
+        Logout
+      </button>
+    `;
+  }
 
   // Load candidates dynamically
   async function loadCandidates() {
@@ -85,5 +124,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Remove default form submit behavior
   form.onsubmit = e => e.preventDefault();
 
-  await loadCandidates();
+  // Check vote status first, then load candidates
+  const hasVoted = await checkVoteStatus();
+  if (!hasVoted) {
+    await loadCandidates();
+  }
 });
